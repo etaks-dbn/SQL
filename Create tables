@@ -1,0 +1,85 @@
+-- Drop dependent tables first in reverse order of importance
+DROP TABLE IF EXISTS EmpSkill;
+DROP TABLE IF EXISTS Employee;
+DROP TABLE IF EXISTS Skill;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Region;
+
+-- Create the non-dependent tables first
+-- Region
+CREATE TABLE region (
+	RegionID int NOT NULL,
+    RegionName varchar (10) NOT NULL,
+    PRIMARY KEY (RegionID)
+);
+
+-- add Region data
+INSERT INTO region VALUES (1001, 'Northwest'); -- add data more w more typing seperate with semicolon ;
+INSERT INTO region VALUES (1002, 'Southwest'); 
+INSERT INTO region VALUES (1003, 'Northeast'); 
+INSERT INTO region VALUES (1004, 'Southeast'); 
+INSERT INTO region VALUES (1005, 'Central'); 
+
+-- Customer
+CREATE TABLE customer (
+	CusID int NOT NULL,
+    CusName varchar (20) NOT NULL,
+    CusPhone varchar(15),
+    RegionID int NOT NULL,
+    PRIMARY KEY (CusID),
+    FOREIGN KEY (RegionID) REFERENCES Region(RegionID)
+);
+
+-- add Customer data
+INSERT INTO customer VALUES -- add data w less typing just seperate by a comma ,
+(1, 'Bellsouth', '222-333-4571', 1003),
+(2, 'Comcast', '253-444-5555', 1003),
+(3, 'Enron', '367-555-6666', 1005),
+(4, 'Exxon', '444-777-7777', 1004);
+
+-- Employee
+CREATE TABLE employee (
+	EmpID varchar(10) NOT NULL, -- var due to letter in the data otherwise int
+    EmpLastName varchar(20) NOT NULL,
+    EmpFirstName varchar(20) NOT NULL,
+    EmpHireDate date NOT NULL,
+    RegionID int NOT NULL,
+    PRIMARY KEY (EmpID),
+    FOREIGN KEY (RegionID) REFERENCES region(RegionID)
+);
+
+INSERT INTO employee VALUES ('E1', 'Hedlund', 'Casey', '2019-2-7', 1004);
+INSERT INTO employee VALUES ('E2', 'Craig', 'Brett', '2019-3-30', 1004);
+INSERT INTO employee VALUES ('E3', 'Williams', 'Josh', '1999-3-17', 1005);
+INSERT INTO employee VALUES ('E4', 'Cope', 'Leslie', '2017-4-21', 1002);
+INSERT INTO employee VALUES ('E5', 'Mudd', 'Roger', '2007-10-18', 1001);
+
+-- Skill
+CREATE TABLE skill (
+	SkillId varchar (10) NOT NULL, -- var due to letter in data
+    SkillDescription varchar (20) NOT NULL,
+    SkillRate double NOT NULL, -- double allows decimal type numbers
+    PRIMARY KEY (SkillID)
+);
+
+-- add skill data
+INSERT INTO skill VALUES ('S1', 'Data Entry I', 12);
+INSERT INTO skill VALUES ('S2', 'Java I', 25);
+INSERT INTO skill VALUES ('S3', 'Python I', 25);
+INSERT INTO skill VALUES ('S4', 'Python II', 35);
+
+-- EmpSkill
+CREATE TABLE empskill (
+	EmpID varchar (10) NOT NULL,
+    SkillID varchar (10) NOT NULL,
+    PRIMARY KEY (EmpID, SkillID),
+    FOREIGN KEY (EmpID) REFERENCES employee(EmpID),
+    FOREIGN KEY (SkillID) REFERENCES skill(SkillID)
+);
+
+-- add EMPSKILL DATA
+INSERT INTO empskill VALUES ('E1', 'S1');
+INSERT INTO empskill VALUES ('E2', 'S1');
+INSERT INTO empskill VALUES ('E3', 'S2');
+INSERT INTO empskill VALUES ('E3', 'S4');
+INSERT INTO empskill VALUES ('E4', 'S3');
